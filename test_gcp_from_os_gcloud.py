@@ -6,7 +6,7 @@ import numpy as np
 # cmd = 'gcloud logging read "jsonPayload.type=vehicle-state" AND jsonPayload.device="5efc568967354e8d" --limit 5 --format=json'
 
 def query_gcp(device_id, event_type, limit=5):
-    query =f'jsonPayload.type="{event_type}" AND jsonPayload.device="{device_id}" AND timestamp>="2024-01-23T00:00:00Z" AND timestamp<="2024-01-25T00:00:00Z"'
+    query =f'jsonPayload.type="{event_type}" AND jsonPayload.device="{device_id}"'
     try:
         byteOutput = subprocess.check_output(["gcloud", "logging", "read", query, "--limit", str(limit), "--format", "json"], timeout=10)
         rlts = json.loads(byteOutput.decode('UTF-8').rstrip())
@@ -39,15 +39,18 @@ if __name__ == "__main__":
 
     device_id = "5efc568967354e8d"
     # event_type = "watchdog-report-summary"
-    event_type = "vehicle-state"
-    # j = query_gcp(device_id, event_type, 1)
+    # event_type = "vehicle-state"
+    # event_type = "device-error"
+    event_type = "camera-info"
+    j = query_gcp(device_id, event_type, 1)
+    print(j)
     # print(j[0]['jsonPayload']['parameters']['imei'])
     # print(j[0]['jsonPayload']['parameters']['data']['current_vehicle_state'])
     # print(j[0]['jsonPayload']['parameters']['version'])
 
-    j2 = query_gcp_ts(device_id, event_type, ts1, ts2)
-    for msg in j2:
-        print(msg['jsonPayload']['message_ts'])
+    # j2 = query_gcp_ts(device_id, event_type, ts1, ts2)
+    # for msg in j2:
+    #     print(msg['jsonPayload']['message_ts'])
 
 
 
